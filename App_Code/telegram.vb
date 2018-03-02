@@ -10,9 +10,9 @@ Imports System.Data.SqlClient
 Public Class telegram
     Inherits System.Web.UI.Page
 
-	Dim filepath = "c:/vsonline/bot/log/" & DateTime.Now().Year & "/" & DateTime.Now().Month & "/" & DateTime.Now().Day & ".txt"
-	Dim path = "c:/vsonline/bot/log/" & DateTime.Now().Year & "/" & DateTime.Now().Month & "/"
-	Private Sub Page_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+    'Dim filepath As String = "d:/vsonline/bot/log/" & DateTime.Now().Year & "/" & DateTime.Now().Month & "/" & DateTime.Now().Day & ".txt"
+    'Dim path As String = "d:/vsonline/bot/log/" & DateTime.Now().Year & "/" & DateTime.Now().Month & "/"
+    Private Sub Page_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
         Dim stream As StreamReader = New StreamReader(Request.InputStream)
         Dim strmContents As String = stream.ReadToEnd()
@@ -27,14 +27,15 @@ Public Class telegram
         'jsonStr = "{""update_id"":268347487,""message"":{""message_id"":358,""from"":{""id"":169920796,""first_name"":""Samuel"",""last_name"":""Surya"",""username"":""Samuelsurya""},""chat"":{""id"":169920796,""first_name"":""Samuel"",""last_name"":""Surya"",""username"":""Samuelsurya"",""type"":""private""},""date"":1463121920,""text"":""\/Reg"",""entities"":[{""type"":""bot_command"",""offset"":0,""length"":4}]}}"
 
         'write log
-        If (Not System.IO.Directory.Exists(path)) Then
-            System.IO.Directory.CreateDirectory(path)
-        End If
+        writeLog(jsonStr)
+        'If (Not System.IO.Directory.Exists(path)) Then
+        '    System.IO.Directory.CreateDirectory(path)
+        'End If
 
-        Using w As StreamWriter = File.AppendText(filepath)
-            Log(jsonStr, w)
-            'Log("Test2", w)
-        End Using
+        'Using w As StreamWriter = File.AppendText(filepath)
+        '    Log(jsonStr, w)
+        '    'Log("Test2", w)
+        'End Using
 
         'Using r As StreamReader = File.OpenText("log.txt")
         'DumpLog(r)
@@ -177,16 +178,16 @@ Public Class telegram
         If vupdateId > lastData Then
             msg = saveData(id, vupdateId, vmsgId, vreplyId, vchatId, vchatfn, vchatln, vchatun, vchattype, vfromId, vfromfn, vfromln, vfromun, vffromId, vffromfn, vffromln, vReplyText, vText, vLong, vLat, vPhoto1, vPhoto2, vPhoto3, vPhotoCap, vVideo, vAudio, vVoice, vDoc, vSticker)
 
-            Using w As StreamWriter = File.AppendText(filepath)
-                Log("MSG : " + msg, w)
-                'Log("Test2", w)
-            End Using
+            writeLog("MSG : " + msg)
+            'Using w As StreamWriter = File.AppendText(filepath)
+            '    Log("MSG : " + msg, w)
+            '    'Log("Test2", w)
+            'End Using
             'vchatId = "169920796"
             'msg = strmContents
             If msg = "" Then msg = "Your command is invalid. Use /help for available command."
             If msg = "/" Then msg = ""
             If msg <> "" Then
-
 
                 Dim url As String = "https://api.telegram.org/bot" & id & "/sendMessage?chat_id=" & vchatId & "&parse_mode=HTML&text="
 
@@ -216,16 +217,16 @@ Public Class telegram
                         resultStr2 = myWebClient2.DownloadString(url & msg.Substring(0, cutlocation))
 
                         msg = msg.Substring(cutlocation)
+                        writeLog("URL : " & url & msg.Substring(0, cutlocation))
+                        'Using w As StreamWriter = File.AppendText(filepath)
+                        '    Log("URL : " & url & msg.Substring(0, cutlocation), w)
 
-                        Using w As StreamWriter = File.AppendText(filepath)
-                            Log("URL : " & url & msg.Substring(0, cutlocation), w)
+                        'End Using
+                        writeLog("Telegram Response : " & resultStr2)
+                        'Using w As StreamWriter = File.AppendText(filepath)
+                        '    Log("Telegram Response : " & resultStr2, w)
 
-                        End Using
-
-                        Using w As StreamWriter = File.AppendText(filepath)
-                            Log("Telegram Response : " & resultStr2, w)
-
-                        End Using
+                        'End Using
 
                     End While
 
@@ -236,16 +237,15 @@ Public Class telegram
 
                     resultStr2 = myWebClient2.DownloadString(url & msg)
 
-                    Using w As StreamWriter = File.AppendText(filepath)
+                    writeLog("URL : " + url & msg)
+                    'Using w As StreamWriter = File.AppendText(filepath)
+                    '    Log("URL : " + url & msg, w)
+                    'End Using
 
-                        Log("URL : " + url & msg, w)
-
-                    End Using
-
-                    Using w As StreamWriter = File.AppendText(filepath)
-                        Log("Telegram Response : " + resultStr2, w)
-
-                    End Using
+                    writeLog("Telegram Response : " + resultStr2)
+                    'Using w As StreamWriter = File.AppendText(filepath)
+                    '    Log("Telegram Response : " + resultStr2, w)
+                    'End Using
 
 
 
@@ -271,17 +271,15 @@ Public Class telegram
 
                             End Using
 
-                            Using w As StreamWriter = File.AppendText(filepath)
+                            writeLog("URL : " + url2 & msg)
+                            'Using w As StreamWriter = File.AppendText(filepath)
+                            'Log("URL : " + url2 & msg, w)
+                            'End Using
 
-                                Log("URL : " + url2 & msg, w)
-
-                            End Using
-
-                            Using w As StreamWriter = File.AppendText(filepath)
-
-                                Log("Telegram Response Photo: " + resultStr2, w)
-
-                            End Using
+                            writeLog("Telegram Response Photo:  " + resultStr2)
+                            'Using w As StreamWriter = File.AppendText(filepath)
+                            'Log("Telegram Response Photo: " + resultStr2, w)
+                            'End Using
 
 
                         Next
@@ -292,17 +290,16 @@ Public Class telegram
                     For Each sendmsg In msg.Split(separator, StringSplitOptions.RemoveEmptyEntries)
                         resultStr2 = myWebClient2.DownloadString(url & sendmsg)
 
-                        Using w As StreamWriter = File.AppendText(filepath)
+                        writeLog("URL : " + url & sendmsg)
+                        'Using w As StreamWriter = File.AppendText(filepath)
+                        'Log("URL : " + url & sendmsg, w)
+                        'End Using
 
-                            Log("URL : " + url & sendmsg, w)
-
-                        End Using
-
-                        Using w As StreamWriter = File.AppendText(filepath)
-
-                            Log("Telegram Response : " + resultStr2, w)
-                            w.WriteLine(vbCrLf + "--------------------------------------------------------------------------")
-                        End Using
+                        writeLog("Telegram Response : " + resultStr2 + vbCrLf + "--------------------------------------------------------------------------")
+                        'Using w As StreamWriter = File.AppendText(filepath)
+                        'Log("Telegram Response : " + resultStr2, w)
+                        'w.WriteLine(vbCrLf + "--------------------------------------------------------------------------")
+                        'End Using
                     Next
 
                 End If
@@ -318,30 +315,30 @@ Public Class telegram
 
 
         Dim sql As String = "exec saveData '" & token & "', '" & vupdateId & "', '" & vmsgId & "', '" & vreplyId & "', '" & vchatId & "', '" & vchatfn & "', '" & vchatln & "', '" & vchatun & "', '" & vchattype & "', '" & vfromId & "', '" & vfromfn & "', '" & vfromln & "', '" & vfromun & "', '" & vffromId & "', '" & vffromfn & "', '" & vffromln & "', '" & vReplyText & "', '" & vText & "', '" & vLong & "', '" & vLat & "', '" & vPhoto1 & "', '" & vPhoto2 & "', '" & vPhoto3 & "', '" & vPhotoCap & "', '" & vvideo & "', '" & vaudio & "', '" & vvoice & "', '" & vdoc & "', '" & vsticker & "'"
-		'vOK, vupdateId, vmsgId, vreplyId, vchatId, vchatfn, vchatln, vchatun, vchattype, vfromId, vfromfn, vfromln, vfromun, vReplyText, vText)
-		Dim constr = "Initial Catalog=BOT;Data Source=oph-alpha;User Id=gov;password=ljcom2x"
+        'vOK, vupdateId, vmsgId, vreplyId, vchatId, vchatfn, vchatln, vchatun, vchattype, vfromId, vfromfn, vfromln, vfromun, vReplyText, vText)
+        Dim constr = "Initial Catalog=BOT;Data Source=oph-alpha;User Id=gov;password=ljcom2x"
 
-		'Using w As StreamWriter = File.AppendText(filepath)
-		'    Log("querry : " + sql, w)
-		'    Log("connection : " + constr, w)
-		'    'Log("Test2", w)
-		'End Using
+        'Using w As StreamWriter = File.AppendText(filepath)
+        '    Log("querry : " + sql, w)
+        '    Log("connection : " + constr, w)
+        '    'Log("Test2", w)
+        'End Using
 
-		Dim con As String = constr
+        Dim con As String = constr
         Dim r = runSQLwithResult(sql, con)
 
-
-        Using w As StreamWriter = File.AppendText(filepath)
-            Log("r : " + r, w)
-            'Log("Test2", w)
-        End Using
+        writeLog("r : " + r)
+        'Using w As StreamWriter = File.AppendText(filepath)
+        'Log("r : " + r, w)
+        'Log("Test2", w)
+        'End Using
 
         Return r
     End Function
     Function getLastMsg(token As String, jsonstr As String) As String
         Dim sql As String = "exec getLastData '" & token & "', '" & Replace(jsonstr, "'", "''") & "'"
-		Dim con As String = "Initial Catalog=BOT;Data Source=oph-alpha;User Id=gov;password=ljcom2x"
-		Dim id As String = runSQLwithResult(sql, con)
+        Dim con As String = "Initial Catalog=BOT;Data Source=oph-alpha;User Id=gov;password=ljcom2x"
+        Dim id As String = runSQLwithResult(sql, con)
 
         Return id
     End Function
@@ -404,11 +401,10 @@ Public Class telegram
             '        Dim myInsertQuery As String = "INSERT INTO Customers (CustomerID, CompanyName) Values('NWIND', 'Northwind Traders')"
             Dim myInsertQuery As String = sqlstr
             '
-
-            Using w As StreamWriter = File.AppendText(filepath)
-                Log("SQL STR : " + sqlstr, w)
-
-            End Using
+            writeLog("SQL STR : " + sqlstr)
+            'Using w As StreamWriter = File.AppendText(filepath)
+            'Log("SQL STR : " + sqlstr, w)
+            'End Using
 
             Dim myCommand As New SqlCommand(myInsertQuery)
             Dim Reader As SqlClient.SqlDataReader
@@ -433,19 +429,19 @@ Public Class telegram
 
         Catch ex As SqlException
             contentoferror = ex.Message & "<br>"
-            Using w As StreamWriter = File.AppendText(filepath)
-                Log("SQL ERROR : " + contentoferror, w)
-
-            End Using
+            writeLog("SQL ERROR : " + contentoferror)
+            'Using w As StreamWriter = File.AppendText(filepath)
+            'Log("SQL ERROR : " + contentoferror, w)
+            'End Using
             result = ""
 
 
         Catch ex As Exception
             contentoferror = ex.Message & "<br>"
-            Using w As StreamWriter = File.AppendText(filepath)
-                Log("ERROR : " + contentoferror, w)
-
-            End Using
+            writeLog("ERROR : " + contentoferror)
+            'Using w As StreamWriter = File.AppendText(filepath)
+            'Log("ERROR : " + contentoferror, w)
+            'End Using
 
 
             result = ""
@@ -500,4 +496,27 @@ Public Class telegram
             line = r.ReadLine()
         End While
     End Sub
+
+    Sub writeLog(logMessage As String)
+        'Dim w As TextWriter
+        Dim path = Server.MapPath("~/log")
+        path = path & "\" '& "OPHContent\log\"
+        Dim logFilepath = path & DateTime.Now().Year & "\" & Right("0" & DateTime.Now().Month, 2) & "\" & Right("0" & DateTime.Now().Day, 2) & ".txt"
+        Dim logPath = path & DateTime.Now().Year & "\" & Right("0" & DateTime.Now().Month, 2) & "\"
+
+        If (Not System.IO.Directory.Exists(logPath)) Then
+            System.IO.Directory.CreateDirectory(logPath)
+        End If
+        Try
+            Using w As StreamWriter = File.AppendText(logFilepath)
+                w.Write(vbCrLf + "Log Entry : ")
+                w.WriteLine("{0} {1}: " + vbCrLf + "{2}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), logMessage)
+                'w.WriteLine("  :{0}", logMessage)
+            End Using
+
+        Catch ex As Exception
+            'Debug.Write(ex.Message.ToString)
+        End Try
+    End Sub
+
 End Class
