@@ -316,7 +316,9 @@ Public Class telegram
 
         Dim sql As String = "exec saveData '" & token & "', '" & vupdateId & "', '" & vmsgId & "', '" & vreplyId & "', '" & vchatId & "', '" & vchatfn & "', '" & vchatln & "', '" & vchatun & "', '" & vchattype & "', '" & vfromId & "', '" & vfromfn & "', '" & vfromln & "', '" & vfromun & "', '" & vffromId & "', '" & vffromfn & "', '" & vffromln & "', '" & vReplyText & "', '" & vText & "', '" & vLong & "', '" & vLat & "', '" & vPhoto1 & "', '" & vPhoto2 & "', '" & vPhoto3 & "', '" & vPhotoCap & "', '" & vvideo & "', '" & vaudio & "', '" & vvoice & "', '" & vdoc & "', '" & vsticker & "'"
         'vOK, vupdateId, vmsgId, vreplyId, vchatId, vchatfn, vchatln, vchatun, vchattype, vfromId, vfromfn, vfromln, vfromun, vReplyText, vText)
-        Dim constr = "Initial Catalog=BOT;Data Source=oph-alpha;User Id=gov;password=ljcom2x"
+        Dim appSettings As NameValueCollection = ConfigurationManager.AppSettings
+        'dynamic account
+        Dim constr = appSettings.Item("Connection")
 
         'Using w As StreamWriter = File.AppendText(filepath)
         '    Log("querry : " + sql, w)
@@ -429,7 +431,7 @@ Public Class telegram
 
         Catch ex As SqlException
             contentoferror = ex.Message & "<br>"
-            writeLog("SQL ERROR : " + contentoferror)
+            writeLog("SQL ERROR : " + contentoferror + " " + myConnectionString)
             'Using w As StreamWriter = File.AppendText(filepath)
             'Log("SQL ERROR : " + contentoferror, w)
             'End Using
@@ -438,7 +440,7 @@ Public Class telegram
 
         Catch ex As Exception
             contentoferror = ex.Message & "<br>"
-            writeLog("ERROR : " + contentoferror)
+            writeLog("SQL ERROR : " + contentoferror + " " + myConnectionString)
             'Using w As StreamWriter = File.AppendText(filepath)
             'Log("ERROR : " + contentoferror, w)
             'End Using

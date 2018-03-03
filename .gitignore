@@ -4,3 +4,7 @@ bot.accdb
 bot.laccdb
 bot.rar
 bin/
+*.htm
+*.html
+*.ps1
+web.config
