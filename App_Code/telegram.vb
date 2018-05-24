@@ -213,9 +213,10 @@ Public Class telegram
                             cutlocation = cutlocation + msg.Substring(cutlocation, 200).IndexOf("%0A")
                         End If
 
-
-                        resultStr2 = myWebClient2.DownloadString(url & msg.Substring(0, cutlocation))
-
+                        Try
+                            resultStr2 = myWebClient2.DownloadString(url & msg.Substring(0, cutlocation))
+                        Catch ex As Exception
+                        End Try
                         msg = msg.Substring(cutlocation)
                         writeLog("URL : " & url & msg.Substring(0, cutlocation))
                         'Using w As StreamWriter = File.AppendText(filepath)
@@ -234,8 +235,12 @@ Public Class telegram
                         photoid = msg.Substring(msg.IndexOf("<Photos>"))
                         msg = msg.Substring(0, msg.IndexOf("<Photos>"))
                     End If
+                    Try
+                        resultStr2 = myWebClient2.DownloadString(url & msg)
+                    Catch ex As Exception
 
-                    resultStr2 = myWebClient2.DownloadString(url & msg)
+                    End Try
+
 
                     writeLog("URL : " + url & msg)
                     'Using w As StreamWriter = File.AppendText(filepath)
@@ -264,7 +269,12 @@ Public Class telegram
 
                         For Each photo In photos.Element("Photos").Elements("Photo")
                             url2 = "https://api.telegram.org/bot" & id & "/sendPhoto?chat_id=" & vchatId & "&photo=" & photo.Value
-                            resultStr2 = myWebClient2.DownloadString(url2)
+                            Try
+                                resultStr2 = myWebClient2.DownloadString(url2)
+                            Catch ex As Exception
+
+                            End Try
+
                             Using w As StreamWriter = File.AppendText("d:\mike.txt")
 
                                 Log("test3", w)
@@ -288,7 +298,12 @@ Public Class telegram
 
                     Dim separator() As String = {"[#newchat#]"}
                     For Each sendmsg In msg.Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                        resultStr2 = myWebClient2.DownloadString(url & sendmsg)
+                        Try
+                            resultStr2 = myWebClient2.DownloadString(url & sendmsg)
+                        Catch ex As Exception
+
+                        End Try
+
 
                         writeLog("URL : " + url & sendmsg)
                         'Using w As StreamWriter = File.AppendText(filepath)

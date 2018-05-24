@@ -13,7 +13,7 @@ Public Class WebService
     Inherits System.Web.Services.WebService
 
     <WebMethod()>
-    Public Function Broadcast(Schedule As String, Message As String, Channel As String) As XmlDocument
+    Public Function Broadcast(Schedule As String, Message As String, Channel As String, Bot as string) As XmlDocument
         Dim result As String = ""
         Try
 
@@ -28,7 +28,7 @@ Public Class WebService
 
             con.Open()
 
-            cmd = New SqlCommand("exec InsertBroadcast '" & Convertedschedule & "','" & Message & "','" & Channel & "'", con)
+            cmd = New SqlCommand("exec InsertBroadcast '" & Convertedschedule & "','" & Message & "','" & Channel & "', '" & Bot & "'", con)
             result = cmd.ExecuteScalar()
 
             con.Close()
